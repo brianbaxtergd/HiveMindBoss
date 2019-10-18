@@ -52,8 +52,8 @@ public class HiveController : MonoBehaviour
                 //transform.Rotate(0f, 1f, 0f, Space.Self);
                 for (int i = 0; i < drones.Count; i++)
                 {
-                    drones[i].transform.RotateAround(transform.up, hiveAngle + hiveRotationSpeed * Time.fixedDeltaTime);
-                    drones[i].transform.Rotate()
+                    //drones[i].transform.RotateAround(transform.up, hiveAngle + hiveRotationSpeed * Time.fixedDeltaTime);
+                    //drones[i].transform.Rotate()
                 }
                 break;
             default:
