@@ -6,28 +6,48 @@ public class HiveController : MonoBehaviour
 {
     public enum eHiveStates
     {
+        spawningDrones,
         rotate,
     }
 
-    [Header("Set in Inspector")]
+    [Header("Inscribed")]
+    public GameObject dronePrefab;
+    [Range(10, 250)]
     public int droneCount;
+    [Range(5f, 25f)]
     public float droneRadius;
     public float droneTimeBetweenSpawns;
     [Tooltip("Measured in degrees per second.")]
-    public float hiveRotationSpeed;
-    public GameObject cube;
-    public GameObject sphere;
-    public GameObject droneAnchor;
-    public GameObject dronePrefab;
+    public Vector3 hiveRotationSpeed;
 
+    [Header("Dynamic")]
+    [SerializeField]
     List<GameObject> drones;
+    [SerializeField]
+    List<DroneController> droneControllers;
+    [SerializeField]
     List<Vector3> dronePositions;
+    [SerializeField]
     eHiveStates hiveState;
-    float hiveAngle = 0f;
 
-    // Start is called before the first frame update
+    GameObject cube;
+    GameObject sphere;
+    GameObject droneAnchor;
+
     private void Start()
     {
+        // Find references to existing child objects.
+        cube = GameObject.Find("HiveCube");
+        if (cube == null)
+            Debug.LogError("HiveController:Start - HiveCube could not be found.");
+        sphere = GameObject.Find("HiveSphere");
+        if (sphere == null)
+            Debug.LogError("HiveController:Start - HiveSphere could not be found.");
+
+        // Instantiate an empty GameObject to hold drones in hierarchy.
+        droneAnchor = new GameObject("DroneAnchor");
+        droneAnchor.transform.SetParent(transform);
+
         drones = new List<GameObject>();
         dronePositions = new List<Vector3>();
 
@@ -38,7 +58,6 @@ public class HiveController : MonoBehaviour
         SetState(eHiveStates.rotate);
     }
 
-    // Update is called once per frame
     private void Update()
     {
         //DebugDrawDronePositions();
@@ -49,18 +68,12 @@ public class HiveController : MonoBehaviour
         switch (hiveState)
         {
             case eHiveStates.rotate:
-                //transform.Rotate(0f, 1f, 0f, Space.Self);
-                for (int i = 0; i < drones.Count; i++)
-                {
-                    //drones[i].transform.RotateAround(transform.up, hiveAngle + hiveRotationSpeed * Time.fixedDeltaTime);
-                    //drones[i].transform.Rotate()
-                }
+                RotateDronePositions(hiveRotationSpeed * Time.fixedDeltaTime);
+                UpdateDronePositions();
                 break;
             default:
                 break;
         }
-        // Update dronePositions.
-        InitializeDronePositions(droneCount, droneRadius, false);
     }
 
     void SetState(eHiveStates _newState)
@@ -107,25 +120,54 @@ public class HiveController : MonoBehaviour
         }
     }
 
-    void AddDrone(Vector3 _targetPosition)
+    void UpdateDronePositions()
+    {
+        for (int i = 0; i < droneControllers.Count; i++)
+        {
+            droneControllers[i].TargetPosition = dronePositions[i];
+        }
+    }
+
+    void RotateDronePositions(Vector3 _angle)
+    {
+        Vector3 dir;
+        for (int i = 0; i < dronePositions.Count; i++)
+        {
+            dir = dronePositions[i] - transform.position;
+            dir = Quaternion.Euler(_angle) * dir;
+            dronePositions[i] = dir + transform.position;
+        }
+    }
+
+    /// <summary>
+    /// Instantiates an instance of the dronePrefab GameObject, then stores both stores its reference within the drones list and its DroneController component with the droneControllers list.
+    /// </summary>
+    /// <param name="_index">Index within drones list.</param>
+    /// <param name="_targetPosition">The initial target position for the Drone to move towards.</param>
+    void AddDrone(int _index, Vector3 _targetPosition)
     {
         // Initialize instance of drone prefab.
         GameObject drone = Instantiate(dronePrefab);
-        //drone.transform.position = transform.position;
         drone.transform.SetParent(droneAnchor.transform);
-        drone.GetComponent<DroneMovement>().TargetPosition = _targetPosition;
+        DroneController dC = drone.GetComponent<DroneController>();
+        dC.Index = _index;
+        dC.TargetPosition = _targetPosition;
         // Store reference to instance.
         drones.Add(drone);
+        // Store reference to instance's DroneController component.
+        droneControllers.Add(dC);
     }
 
     IEnumerator SpawnDrones(float _timeBetweenSpawns)
     {
         for (int i = 0; i < droneCount; i++)
         {
-            AddDrone(dronePositions[i]);
+            AddDrone(i, dronePositions[i]);
             yield return new WaitForSeconds(_timeBetweenSpawns);
         }
     }
+
+    /// Debug Methods ///
 
     void DebugDrawDronePositions()
     {

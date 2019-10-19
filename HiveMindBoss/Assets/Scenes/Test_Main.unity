@@ -288,41 +288,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -30}
+  m_LocalPosition: {x: 0, y: 0, z: -50}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1447316511
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1447316512}
-  m_Layer: 0
-  m_Name: DroneAnchor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1447316512
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1447316511}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1518262799}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1518262798
 GameObject:
@@ -355,7 +325,6 @@ Transform:
   - {fileID: 1845653102}
   - {fileID: 1977384785}
   - {fileID: 219503242}
-  - {fileID: 1447316512}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -371,14 +340,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be5ac0aa003a6584ea316fd99a94c45e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  droneCount: 100
-  droneRadius: 10
-  droneTimeBetweenSpawns: 0.15
-  cube: {fileID: 1845653098}
-  sphere: {fileID: 1977384784}
-  droneAnchor: {fileID: 1447316511}
   dronePrefab: {fileID: 6763504538030751742, guid: b11d2e6b8125dcd48a070262b1486c8e,
     type: 3}
+  droneCount: 250
+  droneRadius: 25
+  droneTimeBetweenSpawns: 0.005
+  hiveRotationSpeed: {x: 0, y: -15, z: 0}
+  drones: []
+  droneControllers: []
+  dronePositions: []
+  hiveState: 0
 --- !u!1 &1845653098
 GameObject:
   m_ObjectHideFlags: 0
@@ -467,7 +438,7 @@ Transform:
   m_GameObject: {fileID: 1845653098}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 1518262799}
   m_RootOrder: 0
@@ -485,7 +456,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minSpeed: 0.5
-  maxSpeed: 3
+  maxSpeed: 2
 --- !u!1 &1977384784
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,7 +485,7 @@ Transform:
   m_GameObject: {fileID: 1977384784}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 9, y: 9, z: 9}
   m_Children: []
   m_Father: {fileID: 1518262799}
   m_RootOrder: 1
@@ -531,8 +502,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 758816e8c155707479c50a191dc3c032, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minScale: 3
-  maxScale: 3.5
+  minScale: 9
+  maxScale: 12
   scaleSpeed: 1.5
 --- !u!23 &1977384787
 MeshRenderer:
