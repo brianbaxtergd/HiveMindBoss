@@ -55,7 +55,7 @@ public class HiveController : MonoBehaviour
 
         StartCoroutine(SpawnDrones(droneTimeBetweenSpawns));
 
-        SetState(eHiveStates.rotate);
+        SetState(eHiveStates.spawningDrones);
     }
 
     private void Update()
@@ -67,6 +67,7 @@ public class HiveController : MonoBehaviour
     {
         switch (hiveState)
         {
+            case eHiveStates.spawningDrones:
             case eHiveStates.rotate:
                 RotateDronePositions(hiveRotationSpeed * Time.fixedDeltaTime);
                 UpdateDronePositions();
@@ -78,6 +79,17 @@ public class HiveController : MonoBehaviour
 
     void SetState(eHiveStates _newState)
     {
+        switch (_newState)
+        {
+            case eHiveStates.spawningDrones:
+                break;
+            case eHiveStates.rotate:
+                StartCoroutine(DroneShimmerLinear(0.001f));
+                break;
+            default:
+                break;
+        }
+
         hiveState = _newState;
     }
 
@@ -164,6 +176,19 @@ public class HiveController : MonoBehaviour
         {
             AddDrone(i, dronePositions[i]);
             yield return new WaitForSeconds(_timeBetweenSpawns);
+        }
+
+        SetState(eHiveStates.rotate);
+    }
+
+    IEnumerator DroneShimmerLinear(float _timeBetweenShimmers)
+    {
+        for (int i = 0; i < droneControllers.Count; i += 2)
+        {
+            droneControllers[i].Shimmer();
+            if (i + 1 < droneControllers.Count)
+                droneControllers[i + 1].Shimmer();
+            yield return new WaitForSeconds(_timeBetweenShimmers);
         }
     }
 
