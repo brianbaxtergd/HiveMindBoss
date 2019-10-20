@@ -22,7 +22,7 @@ public class HiveController : MonoBehaviour
 
     [Header("Dynamic")]
     [SerializeField]
-    List<GameObject> drones;
+    List<GameObject> activeDrones;
     [SerializeField]
     List<DroneController> droneControllers;
     [SerializeField]
@@ -33,6 +33,7 @@ public class HiveController : MonoBehaviour
     GameObject cube;
     GameObject sphere;
     GameObject droneAnchor;
+    GameObject player;
 
     private void Start()
     {
@@ -44,11 +45,16 @@ public class HiveController : MonoBehaviour
         if (sphere == null)
             Debug.LogError("HiveController:Start - HiveSphere could not be found.");
 
+        // Find reference to player.
+        player = GameObject.Find("Player");
+        if (player == null)
+            Debug.LogError("HiveController:Start - Player could not be found.");
+
         // Instantiate an empty GameObject to hold drones in hierarchy.
         droneAnchor = new GameObject("DroneAnchor");
         droneAnchor.transform.SetParent(transform);
 
-        drones = new List<GameObject>();
+        activeDrones = new List<GameObject>();
         dronePositions = new List<Vector3>();
 
         InitializeDronePositions(droneCount, droneRadius, false);
@@ -85,6 +91,7 @@ public class HiveController : MonoBehaviour
                 break;
             case eHiveStates.rotate:
                 StartCoroutine(DroneShimmerLinear(0.001f));
+                StartCoroutine(DroneAttack(10, 1));
                 break;
             default:
                 break;
@@ -136,7 +143,8 @@ public class HiveController : MonoBehaviour
     {
         for (int i = 0; i < droneControllers.Count; i++)
         {
-            droneControllers[i].TargetPosition = dronePositions[i];
+            if (!droneControllers[i].IsAttacking)
+                droneControllers[i].TargetPosition = dronePositions[i];
         }
     }
 
@@ -165,9 +173,32 @@ public class HiveController : MonoBehaviour
         dC.Index = _index;
         dC.TargetPosition = _targetPosition;
         // Store reference to instance.
-        drones.Add(drone);
+        activeDrones.Add(drone);
         // Store reference to instance's DroneController component.
         droneControllers.Add(dC);
+    }
+
+    void RemoveDrone(GameObject _drone)
+    {
+        if (!activeDrones.Remove(_drone))
+            Debug.LogError("HiveController:RemoveDrone(GameObject _drone) - removal unsuccessful.");
+    }
+
+    GameObject GetDroneNearestToPlayer()
+    {
+        float nearestDist = 1000f;
+        GameObject nearestDrone = null;
+        foreach (GameObject drone in activeDrones)
+        {
+            float curDist = Vector3.Distance(drone.transform.position, player.transform.position);
+            if (curDist < nearestDist)
+            {
+                nearestDist = curDist;
+                nearestDrone = drone;
+            }
+        }
+
+        return nearestDrone;
     }
 
     IEnumerator SpawnDrones(float _timeBetweenSpawns)
@@ -190,6 +221,36 @@ public class HiveController : MonoBehaviour
                 droneControllers[i + 1].Shimmer();
             yield return new WaitForSeconds(_timeBetweenShimmers);
         }
+    }
+
+    IEnumerator DroneAttack(int _numberOfDrones, float _timeBetweenAttacks)
+    {
+        _numberOfDrones = Mathf.Clamp(_numberOfDrones, 0, activeDrones.Count);
+        List<GameObject> attackingDrones = new List<GameObject>();
+
+        for (int i = 0; i < _numberOfDrones; i++)
+        {
+            GameObject attackDrone = GetDroneNearestToPlayer();
+            if (attackDrone != null)
+            {
+                DroneController dC = attackDrone.GetComponent<DroneController>();
+                if (dC != null)
+                {
+                    dC.Attack(player.transform.position);
+                    activeDrones.Remove(dC.gameObject);
+                    attackingDrones.Add(dC.gameObject);
+                }
+            }
+
+            yield return new WaitForSeconds(_timeBetweenAttacks);
+        }
+
+        // Add list of attackingDrones back to Hive's activeDrones.
+        foreach (GameObject drone in attackingDrones)
+        {
+            activeDrones.Add(drone);
+        }
+        attackingDrones.Clear();
     }
 
     /// Debug Methods ///

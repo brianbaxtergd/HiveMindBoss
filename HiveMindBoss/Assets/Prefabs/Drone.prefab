@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6763504538030751234}
   - component: {fileID: 6763504538030751741}
   - component: {fileID: 4409654141249662824}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Drone
   m_TagString: Drone
   m_Icon: {fileID: 0}
@@ -105,7 +105,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a2b02a07584626459a7db4e4a16ba92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 15
-  shimmerColor: {r: 1, g: 0, b: 0.25895596, a: 0}
+  moveSpeed: 20
+  attackDamage: 20
+  shimmerColor: {r: 1, g: 0, b: 0.25895596, a: 1}
   shimmerTime: 1.5
   shimmerScale: 1.2

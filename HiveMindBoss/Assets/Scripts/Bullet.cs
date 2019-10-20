@@ -33,6 +33,7 @@ public class Bullet : MonoBehaviour
         string tag = collision.gameObject.tag;
         if (tag == "Drone")
         {
+            Destroy(gameObject);
             Debug.Log("Bullet hit drone " + collision.gameObject.GetComponent<DroneController>().Index);
         }
     }
