@@ -6,8 +6,11 @@ using UnityEngine;
 public class DroneController : MonoBehaviour
 {
     [Header("Inscribed")]
+    public int health = 100;
     public float moveSpeed = 1f;
     public int attackDamage = 10;
+    public Color hurtColor;
+    public float hurtTime;
     public Color shimmerColor;
     [Tooltip("Amount of time in seconds shimmer is active.")]
     public float shimmerTime;
@@ -15,6 +18,7 @@ public class DroneController : MonoBehaviour
 
     Color defaultColor;
     Vector3 defaultScale;
+    bool isAlive = true;
     bool isAttacking = false;
     bool isShimmering = false;
 
@@ -29,7 +33,13 @@ public class DroneController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        UpdatePosition();
+        if (isAlive)
+            UpdatePosition();
+    }
+
+    private void OnDestroy()
+    {
+        HiveController.RemoveDrone(gameObject);
     }
 
     void UpdatePosition()
@@ -41,14 +51,21 @@ public class DroneController : MonoBehaviour
             isAttacking = false;
     }
 
-    public void Shimmer()
+    public void TakeDamage(int _damage)
     {
-        if (isShimmering)
+        if (!isAlive)
+            return;
+
+        health = Mathf.Max(health - _damage, 0);
+        if (health == 0)
         {
-            StopCoroutine("ShimmerRoutine");
-            isShimmering = false;
+            isAlive = false;
+
+            //Destroy(gameObject);
         }
-        StartCoroutine("ShimmerRoutine");
+
+        // Trigger shimmer effect.
+        Shimmer(hurtColor, hurtTime);
     }
 
     public void Attack(Vector3 _targetPosition)
@@ -64,16 +81,36 @@ public class DroneController : MonoBehaviour
         Shimmer();
     }
 
-    IEnumerator ShimmerRoutine()
+    public void Shimmer()
+    {
+        if (isShimmering)
+        {
+            StopCoroutine("ShimmerColor");
+            isShimmering = false;
+        }
+        StartCoroutine(ShimmerColor(shimmerColor, shimmerTime));
+    }
+
+    public void Shimmer(Color _color, float _shimmerTime)
+    {
+        if (isShimmering)
+        {
+            StopCoroutine("ShimmerColor");
+            isShimmering = false;
+        }
+        StartCoroutine(ShimmerColor(_color, _shimmerTime));
+    }
+
+    IEnumerator ShimmerColor(Color _color, float _shimmerTime)
     {
         isShimmering = true;
         // Set timer values.
         float startTime = Time.time;
         float currTime = startTime;
-        float endTime = startTime + shimmerTime;
+        float endTime = startTime + _shimmerTime;
         // Change material color.
         Renderer rend = GetComponent<Renderer>();
-        rend.material.color = shimmerColor;
+        rend.material.color = _color;
         yield return new WaitForSeconds(0.1f);
         // Increase scale to max.
         //transform.localScale = defaultScale * shimmerScale;
@@ -81,8 +118,8 @@ public class DroneController : MonoBehaviour
         // Lerp color back to default.
         do
         {
-            rend.material.color = Color.Lerp(shimmerColor, defaultColor, Mathf.Clamp((currTime - startTime) / shimmerTime, 0f, 1f));
-            float newScale = Mathf.Lerp(defaultScale.x * shimmerScale, defaultScale.x, (currTime - startTime) / shimmerTime);
+            rend.material.color = Color.Lerp(_color, defaultColor, Mathf.Clamp((currTime - startTime) / _shimmerTime, 0f, 1f));
+            //float newScale = Mathf.Lerp(defaultScale.x * shimmerScale, defaultScale.x, (currTime - startTime) / shimmerTime);
             //transform.localScale = new Vector3(1, 1, 1) * newScale;
             currTime = Time.time;
             yield return null;
@@ -106,6 +143,11 @@ public class DroneController : MonoBehaviour
     {
         get { return targetPosition; }
         set { targetPosition = value; }
+    }
+    public bool IsAlive
+    {
+        get { return isAlive; }
+        private set { isAlive = value; }
     }
     public bool IsAttacking
     {

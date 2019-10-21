@@ -7,13 +7,17 @@ public class PlayerCombat : MonoBehaviour
     [Header("Inscribed")]
     public GameObject bulletPrefab;
     public float shotCooldownTime;
+    public float crossHairSpeed = 10f;
 
     float shotCooldown;
     bool useLeftBarrel = true;
     Transform leftGunBarrel;
     Transform rightGunBarrel;
+    Transform crosshair;
     Animation leftGunAnim;
     Animation rightGunAnim;
+    AudioSource leftGunAudio;
+    AudioSource rightGunAudio;
 
     void Start()
     {
@@ -24,12 +28,19 @@ public class PlayerCombat : MonoBehaviour
         if (rightGunBarrel == null)
             Debug.LogError("PlayerCombat:Start() - GameObject RightGunBarrel not found.");
 
-        leftGunAnim = GameObject.Find("LeftGun").GetComponent<Animation>();
+        GameObject leftGun, rightGun;
+        leftGun = GameObject.Find("LeftGun");
+        rightGun = GameObject.Find("RightGun");
+
+        leftGunAnim = leftGun.GetComponent<Animation>();
         if (leftGunAnim == null)
             Debug.LogError("PlayerCombat:Start() - Left gun barrel firing animation not found.");
-        rightGunAnim = GameObject.Find("RightGun").GetComponent<Animation>();
+        rightGunAnim = rightGun.GetComponent<Animation>();
         if (rightGunAnim == null)
             Debug.LogError("PlayerCombat:Start() - Right gun barrel firing animation not found.");
+
+        leftGunAudio = leftGun.GetComponent<AudioSource>();
+        rightGunAudio = rightGun.GetComponent<AudioSource>();
     }
 
     void Update()
@@ -51,14 +62,18 @@ public class PlayerCombat : MonoBehaviour
     {
         // Instantiate a bullet.
         Vector3 spawnPos = (useLeftBarrel) ? leftGunBarrel.position : rightGunBarrel.position;
+        Vector3 lookDir = (useLeftBarrel) ? leftGunBarrel.forward : rightGunBarrel.forward;
         GameObject bullet = Instantiate(bulletPrefab);
         bullet.transform.position = spawnPos;
-        bullet.transform.rotation = transform.rotation;
+        bullet.GetComponent<Bullet>().aimDir = (useLeftBarrel) ? CrosshairMovement.LeftCross.position : CrosshairMovement.RightCross.position;
         // Play gun barrel firing animation.
         Animation fireAnim = (useLeftBarrel) ? leftGunAnim : rightGunAnim;
         if (fireAnim.isPlaying)
             fireAnim.Stop();
         fireAnim.Play();
+        // Play fire audio.
+        AudioSource fireAudio = (useLeftBarrel) ? leftGunAudio : rightGunAudio;
+        fireAudio.Play();
         // Swap barrels for next shot.
         useLeftBarrel = !useLeftBarrel;
     }

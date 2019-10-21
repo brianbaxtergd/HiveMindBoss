@@ -214,5 +214,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e628329952d43fe4fa10f536a7389c75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 50
+  speed: 60
   lifeTime: 3
+  aimDir: {x: 0, y: 0, z: 0}

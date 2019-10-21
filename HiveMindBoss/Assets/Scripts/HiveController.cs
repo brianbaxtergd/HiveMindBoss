@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class HiveController : MonoBehaviour
 {
+    static private HiveController _S;
+
     public enum eHiveStates
     {
         spawningDrones,
         rotate,
     }
 
-    [Header("Inscribed")]
+    [Header("Inscribed - Drones")]
     public GameObject dronePrefab;
     [Range(10, 250)]
     public int droneCount;
@@ -18,15 +20,18 @@ public class HiveController : MonoBehaviour
     public float droneRadius;
     public float droneTimeBetweenSpawns;
     [Tooltip("Measured in degrees per second.")]
+
+    [Header("Inscribed - Hive")]
     public Vector3 hiveRotationSpeed;
+    public Vector3 hiveRotationSpeedAttacking;
 
     [Header("Dynamic")]
     [SerializeField]
-    List<GameObject> activeDrones;
+    static List<GameObject> activeDrones = new List<GameObject>();
     [SerializeField]
-    List<DroneController> droneControllers;
+    static List<DroneController> droneControllers = new List<DroneController>();
     [SerializeField]
-    List<Vector3> dronePositions;
+    static List<Vector3> dronePositions = new List<Vector3>();
     [SerializeField]
     eHiveStates hiveState;
 
@@ -37,6 +42,9 @@ public class HiveController : MonoBehaviour
 
     private void Start()
     {
+        if (_S == null)
+            _S = this;
+
         // Find references to existing child objects.
         cube = GameObject.Find("HiveCube");
         if (cube == null)
@@ -53,9 +61,6 @@ public class HiveController : MonoBehaviour
         // Instantiate an empty GameObject to hold drones in hierarchy.
         droneAnchor = new GameObject("DroneAnchor");
         droneAnchor.transform.SetParent(transform);
-
-        activeDrones = new List<GameObject>();
-        dronePositions = new List<Vector3>();
 
         InitializeDronePositions(droneCount, droneRadius, false);
 
@@ -178,10 +183,12 @@ public class HiveController : MonoBehaviour
         droneControllers.Add(dC);
     }
 
-    void RemoveDrone(GameObject _drone)
+    static public void RemoveDrone(GameObject _drone)
     {
         if (!activeDrones.Remove(_drone))
-            Debug.LogError("HiveController:RemoveDrone(GameObject _drone) - removal unsuccessful.");
+            Debug.LogError("HiveController:RemoveDrone(GameObject _drone) - activeDrones removal unsuccessful.");
+        if (!droneControllers.Remove(_drone.GetComponent<DroneController>()))
+            Debug.LogError("HiveController:RemoveDrone(GameObject _drone) - droneControlls removal unsuccessful.");
     }
 
     GameObject GetDroneNearestToPlayer()
@@ -227,6 +234,8 @@ public class HiveController : MonoBehaviour
     {
         _numberOfDrones = Mathf.Clamp(_numberOfDrones, 0, activeDrones.Count);
         List<GameObject> attackingDrones = new List<GameObject>();
+        Vector3 startRotation = hiveRotationSpeed;
+        hiveRotationSpeed = hiveRotationSpeedAttacking;
 
         for (int i = 0; i < _numberOfDrones; i++)
         {
@@ -251,6 +260,8 @@ public class HiveController : MonoBehaviour
             activeDrones.Add(drone);
         }
         attackingDrones.Clear();
+
+        hiveRotationSpeed = startRotation;
     }
 
     /// Debug Methods ///

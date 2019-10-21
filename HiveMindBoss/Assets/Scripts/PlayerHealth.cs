@@ -41,9 +41,12 @@ public class PlayerHealth : MonoBehaviour
             DroneController dC = other.gameObject.GetComponent<DroneController>();
             if (dC != null)
             {
-                TakeDamage(dC.attackDamage);
-                if (dC.IsAttacking)
-                    dC.IsAttacking = false;
+                if (dC.IsAlive)
+                {
+                    TakeDamage(dC.attackDamage);
+                    if (dC.IsAttacking)
+                        dC.IsAttacking = false;
+                }
             }
         }
     }

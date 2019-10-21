@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
 
     Transform hive;
     Transform guns;
+    Transform crosshair;
     Quaternion gunRotationDefault;
 
     void Start()
@@ -22,6 +23,10 @@ public class PlayerMovement : MonoBehaviour
         if (guns == null)
             Debug.LogError("PlayerMovement:Start() - Unable to find GameObject Gun's Transform component.");
         gunRotationDefault = guns.localRotation;
+
+        crosshair = GameObject.Find("Crosshair").transform;
+        if (crosshair == null)
+            Debug.LogError("PlayerMovement:Start() - Unable to find GameObject Crosshair's Transform component.");
     }
 
     void FixedUpdate()
@@ -42,6 +47,7 @@ public class PlayerMovement : MonoBehaviour
         Quaternion goalRot = Quaternion.Euler(0f, 0f, tiltAmount);
         curRot = Quaternion.Slerp(curRot, goalRot, 4f * Time.fixedDeltaTime);
         guns.localRotation = curRot;
+        crosshair.localRotation = curRot;
 
         if (Mathf.Abs(ver) > 0f)
         {
