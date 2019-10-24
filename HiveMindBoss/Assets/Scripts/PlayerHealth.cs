@@ -30,7 +30,10 @@ public class PlayerHealth : MonoBehaviour
         {
             hurtCooldown -= Time.deltaTime;
             if (hurtCooldown <= 0f)
+            {
+                hurtCooldown = 0f;
                 isHurt = false;
+            }
         }
     }
 
@@ -38,16 +41,27 @@ public class PlayerHealth : MonoBehaviour
     {
         if (other.gameObject.tag == "Drone")
         {
-            DroneController dC = other.gameObject.GetComponent<DroneController>();
-            if (dC != null)
+            Drone drone = other.gameObject.GetComponent<Drone>();
+            if (drone != null)
             {
-                if (dC.IsAlive)
+                if (drone.IsAlive)
                 {
-                    TakeDamage(dC.attackDamage);
-                    if (dC.IsAttacking)
-                        dC.IsAttacking = false;
+                    TakeDamage(drone.attackDamage);
+                    if (drone.IsAttacking)
+                        drone.IsAttacking = false;
                 }
             }
+            return;
+        }
+
+        if (other.gameObject.tag == "HiveCoreLaser")
+        {
+            HiveCoreLaser hCL = other.gameObject.GetComponentInParent<HiveCoreLaser>();
+            if (hCL != null)
+            {
+                TakeDamage(hCL.Damage);
+            }
+            return;
         }
     }
 

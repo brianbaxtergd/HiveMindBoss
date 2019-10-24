@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class HiveController : MonoBehaviour
 {
+    /*
+
     static private HiveController _S;
 
     public enum eHiveStates
@@ -81,7 +83,7 @@ public class HiveController : MonoBehaviour
             case eHiveStates.spawningDrones:
             case eHiveStates.rotate:
                 RotateDronePositions(hiveRotationSpeed * Time.fixedDeltaTime);
-                UpdateDronePositions();
+                //UpdateDronePositions();
                 break;
             default:
                 break;
@@ -148,7 +150,7 @@ public class HiveController : MonoBehaviour
     {
         for (int i = 0; i < droneControllers.Count; i++)
         {
-            if (!droneControllers[i].IsAttacking)
+            if (droneControllers[i].IsAlive && !droneControllers[i].IsAttacking)
                 droneControllers[i].TargetPosition = dronePositions[i];
         }
     }
@@ -183,12 +185,19 @@ public class HiveController : MonoBehaviour
         droneControllers.Add(dC);
     }
 
-    static public void RemoveDrone(GameObject _drone)
+    static public void RemoveDrone(int _index)
     {
-        if (!activeDrones.Remove(_drone))
-            Debug.LogError("HiveController:RemoveDrone(GameObject _drone) - activeDrones removal unsuccessful.");
-        if (!droneControllers.Remove(_drone.GetComponent<DroneController>()))
-            Debug.LogError("HiveController:RemoveDrone(GameObject _drone) - droneControlls removal unsuccessful.");
+        // Cube shimmer effect.
+        _S.cube.GetComponent<ShimmerColor>().Shimmer(
+            droneControllers[_index].DefaultColor,
+            droneControllers[_index].shimmerTime);
+
+        droneControllers.RemoveAt(_index);
+            //Debug.LogError("HiveController:RemoveDrone(GameObject _drone) - droneControllers removal unsuccessful.");
+        activeDrones.RemoveAt(_index);
+        //Debug.LogError("HiveController:RemoveDrone(GameObject _drone) - activeDrones removal unsuccessful.");
+
+        _S.droneCount -= 1;
     }
 
     GameObject GetDroneNearestToPlayer()
@@ -261,7 +270,14 @@ public class HiveController : MonoBehaviour
         }
         attackingDrones.Clear();
 
+        InitializeDronePositions(droneCount, droneRadius, false);
+
         hiveRotationSpeed = startRotation;
+    }
+
+    static public List<Vector3> DronePositions
+    {
+        get { return dronePositions; }
     }
 
     /// Debug Methods ///
@@ -273,4 +289,6 @@ public class HiveController : MonoBehaviour
             Debug.DrawLine(transform.position, dronePositions[i], Color.white);
         }
     }
+
+    */
 }

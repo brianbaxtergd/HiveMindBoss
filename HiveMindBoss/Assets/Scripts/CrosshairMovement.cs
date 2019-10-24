@@ -37,7 +37,7 @@ public class CrosshairMovement : MonoBehaviour
         transform.position = mousePoint3D;
 
         // Point guns at crosshair(s).
-        guns.transform.LookAt(transform.position);
+        guns.transform.LookAt(transform.position, guns.transform.up); // guns.transform.up is used to preserve tilt from player movement.
 
         // Unlock cursor with esc key.
         if (Cursor.lockState != CursorLockMode.None)

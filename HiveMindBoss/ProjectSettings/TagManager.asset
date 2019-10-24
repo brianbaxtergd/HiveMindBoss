@@ -7,6 +7,7 @@ TagManager:
   - Drone
   - Bullet
   - HiveSphere
+  - HiveCoreLaser
   layers:
   - Default
   - TransparentFX
@@ -20,8 +21,8 @@ TagManager:
   - Bullet
   - Player
   - Enemy
-  - 
-  - 
+  - PostProcessing
+  - Laser
   - 
   - 
   - 

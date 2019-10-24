@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 6763504538030751235}
   - component: {fileID: 6763504538030751234}
   - component: {fileID: 6763504538030751741}
-  - component: {fileID: 4409654141249662824}
+  - component: {fileID: 7920305889572693063}
+  - component: {fileID: 3225700277189341900}
   m_Layer: 11
   m_Name: Drone
   m_TagString: Drone
@@ -93,7 +94,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4409654141249662824
+--- !u!114 &7920305889572693063
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -102,14 +103,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 6763504538030751742}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a2b02a07584626459a7db4e4a16ba92, type: 3}
+  m_Script: {fileID: 11500000, guid: be7c27a466cf9f242bb76560ba24fa13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
   moveSpeed: 25
   attackDamage: 20
-  hurtColor: {r: 0, g: 1, b: 0.97541475, a: 0}
+  hurtColor: {r: 0, g: 1, b: 0.9764706, a: 1}
   hurtTime: 0.5
-  shimmerColor: {r: 1, g: 0, b: 0.25895596, a: 1}
+  shimmerColor: {r: 1, g: 0, b: 0.25882354, a: 1}
   shimmerTime: 1.5
-  shimmerScale: 1.2
+--- !u!114 &3225700277189341900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6763504538030751742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 291727951ce4cfc40807b56ddffee7a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shimmerTime: 1

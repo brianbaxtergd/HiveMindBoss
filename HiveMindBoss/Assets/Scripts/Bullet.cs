@@ -38,7 +38,7 @@ public class Bullet : MonoBehaviour
         string tag = collision.gameObject.tag;
         if (tag == "Drone")
         {
-            collision.gameObject.GetComponent<DroneController>().TakeDamage(damage);
+            collision.gameObject.GetComponent<Drone>().TakeDamage(damage);
             Destroy(gameObject);
         }
     }
