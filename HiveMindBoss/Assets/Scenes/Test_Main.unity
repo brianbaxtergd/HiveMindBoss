@@ -1782,6 +1782,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1845653102}
+  - {fileID: 1909976557}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1805,8 +1806,9 @@ MonoBehaviour:
   hiveRotationIdle: {x: 0, y: -15, z: 0}
   hiveRotationAttacking: {x: 0, y: -60, z: 0}
   idleStateTime: 10
-  attackStateDroneCount: 5
+  attackStateDroneCount: 0
   hiveState: 0
+  hiveTopology: 0
   activeDrones: []
   dronePositions: []
 --- !u!1 &1571018620
@@ -1900,8 +1902,8 @@ GameObject:
   - component: {fileID: 1649405629}
   - component: {fileID: 1649405628}
   m_Layer: 13
-  m_Name: HiveCoreLaserBeam
-  m_TagString: HiveCoreLaser
+  m_Name: HiveLaserBeam
+  m_TagString: HiveLaser
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2024,7 +2026,6 @@ GameObject:
   - component: {fileID: 1845653101}
   - component: {fileID: 1845653100}
   - component: {fileID: 1845653099}
-  - component: {fileID: 1845653103}
   - component: {fileID: 1845653104}
   m_Layer: 0
   m_Name: HiveCore
@@ -2104,24 +2105,9 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:
   - {fileID: 1977384785}
-  - {fileID: 1909976557}
   m_Father: {fileID: 1518262799}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1845653103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1845653098}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9fa8e302b60fd8041bae4e0c4d984fbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  minSpeed: 0.5
-  maxSpeed: 2
 --- !u!114 &1845653104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2146,7 +2132,7 @@ GameObject:
   - component: {fileID: 1909976557}
   - component: {fileID: 1909976558}
   m_Layer: 0
-  m_Name: HiveCoreLaser
+  m_Name: HiveLaser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2159,12 +2145,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1909976556}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1649405627}
-  m_Father: {fileID: 1845653102}
+  m_Father: {fileID: 1518262799}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1909976558
@@ -2176,18 +2162,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1909976556}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46be3ebce74d7ae428b58f2c2429f26a, type: 3}
+  m_Script: {fileID: 11500000, guid: b67ccac81cc2b9d48aad6e47e3127e29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 25
-  aimSpeed: 10
-  idleTime: 1
-  chargeTime: 1
-  extendTime: 1
-  fireTime: 3
-  retractTime: 1.5
-  maxZScale: 60
-  state: 1
+  rotationSpeed: 15
+  chargeTime: 3
+  extendTime: 0.25
+  fireTime: 2
+  retractTime: 1
+  minScale: {x: 4, y: 4, z: 3}
+  maxZScale: 30
+  state: 0
 --- !u!1 &1927521802
 GameObject:
   m_ObjectHideFlags: 0
@@ -2307,7 +2293,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1977384785
 Transform:
   m_ObjectHideFlags: 0

@@ -111,7 +111,7 @@ MonoBehaviour:
   attackDamage: 20
   hurtColor: {r: 0, g: 1, b: 0.9764706, a: 1}
   hurtTime: 0.5
-  shimmerColor: {r: 1, g: 0, b: 0.25882354, a: 1}
+  shimmerColor: {r: 0, g: 0, b: 0, a: 1}
   shimmerTime: 1.5
 --- !u!114 &3225700277189341900
 MonoBehaviour:

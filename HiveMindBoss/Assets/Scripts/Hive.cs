@@ -38,6 +38,8 @@ public class Hive : MonoBehaviour
     [SerializeField]
     eHiveStates hiveState;
     [SerializeField]
+    eHiveTopologies hiveTopology;
+    [SerializeField]
     List<Drone> activeDrones;
     [SerializeField]
     List<Vector3> dronePositions;
@@ -45,6 +47,7 @@ public class Hive : MonoBehaviour
     GameObject player;
     GameObject core;
     GameObject shield;
+    HiveLaser laser;
     GameObject droneAnchor;
 
     float hiveStateTime = 0f;
@@ -61,20 +64,23 @@ public class Hive : MonoBehaviour
         // Find and store references.
         player = GameObject.Find("Player");
         if (player == null)
-            Debug.LogError("Hive:Start() - Player is null.");
+            Debug.LogError("Hive:Start() - player is null.");
         core = GameObject.Find("HiveCore");
         if (core == null)
-            Debug.LogError("Hive:Start - HiveCore is null.");
+            Debug.LogError("Hive:Start() - core is null.");
         shield = GameObject.Find("HiveCoreShield");
         if (shield == null)
-            Debug.LogError("Hive:Start - HiveCoreShield is null.");
+            Debug.LogError("Hive:Start() - shield is null.");
+        laser = GameObject.Find("HiveLaser").GetComponent<HiveLaser>();
+        if (laser == null)
+            Debug.LogError("Hive:Start() - laser is null");
 
         // Spawn empty game object to act as drone anchor in hierarchy.
         droneAnchor = new GameObject("DroneAnchor");
         droneAnchor.transform.SetParent(transform);
 
         // Initialize dronePositions and instantiate drones.
-        DefineDronePositions(eHiveTopologies.doubleRing);
+        DefineDronePositions(eHiveTopologies.sphere);
         StartCoroutine(SpawnDrones());
     }
 
@@ -180,6 +186,7 @@ public class Hive : MonoBehaviour
             default:
                 break;
         }
+        hiveTopology = _hiveTopology;
     }
 
     void RotateDronePositions(Vector3 _rotation)

@@ -54,12 +54,13 @@ public class PlayerHealth : MonoBehaviour
             return;
         }
 
-        if (other.gameObject.tag == "HiveCoreLaser")
+        if (other.gameObject.tag == "HiveLaser")
         {
-            HiveCoreLaser hCL = other.gameObject.GetComponentInParent<HiveCoreLaser>();
+            HiveLaser hCL = other.gameObject.GetComponentInParent<HiveLaser>();
             if (hCL != null)
             {
                 TakeDamage(hCL.Damage);
+                hCL.StopFiring();
             }
             return;
         }
