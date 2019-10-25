@@ -32,6 +32,7 @@ public class HiveLaser : MonoBehaviour
     float minZScale;
     float zScale;
     Vector3 idleScale;
+    Vector3 chargeScale;
 
     private void Start()
     {
@@ -42,6 +43,8 @@ public class HiveLaser : MonoBehaviour
         zScale = minScale.z;
         minZScale = zScale;
         idleScale = Vector3.zero;
+        chargeScale = minScale;
+        chargeScale.z = 2f;
 
         SetState(eHiveLaserStates.idle);
     }
@@ -55,6 +58,7 @@ public class HiveLaser : MonoBehaviour
                     Fire();
                 break;
             case eHiveLaserStates.charge:
+                transform.localScale = Vector3.Lerp(idleScale, chargeScale, stateTimer / (chargeTime * 0.34f));
                 if (stateTimer >= chargeTime)
                     SetState(eHiveLaserStates.extend);
                 break;
@@ -63,8 +67,8 @@ public class HiveLaser : MonoBehaviour
                 RotateTowardsTarget(playerTrans.position);
                 // Update scale.
                 transform.localScale = new Vector3(
-                    transform.localScale.x,
-                    transform.localScale.y,
+                    minScale.x,
+                    minScale.y,
                     Mathf.Lerp(zScale, maxZScale, stateTimer / extendTime));
                 if (stateTimer >= extendTime)
                     SetState(eHiveLaserStates.fire);
@@ -89,8 +93,7 @@ public class HiveLaser : MonoBehaviour
         }
 
         // Update position.
-        //transform.localPosition = transform.forward * (transform.lossyScale.z - minScale.z * transform.localScale.z) * 0.5f;
-        transform.localPosition = transform.forward * (minScale.z * transform.localScale.z - transform.lossyScale.z) * 0.5f;
+        transform.localPosition = transform.forward * (minScale.z * transform.localScale.z - transform.lossyScale.z) * 0.5f; // Not entirely sure why this works as intended.. although I've noted it only works when minScale.z = 3;
 
 
         // Update state timer.
@@ -107,9 +110,9 @@ public class HiveLaser : MonoBehaviour
                 transform.localScale = idleScale;
                 break;
             case eHiveLaserStates.charge:
-                transform.localScale = minScale;
                 break;
             case eHiveLaserStates.extend:
+                transform.localScale = minScale;
                 break;
             case eHiveLaserStates.fire:
                 break;
