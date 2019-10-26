@@ -7,10 +7,11 @@ public class CameraShake : MonoBehaviour
     static private CameraShake _S;
 
     [Header("Inscribed")]
-    public float shakeDuration = 0f;
-    public float shakeMagnitude = 0.7f;
+    public float shakeDuration = 0.5f;
+    public float shakeMagnitude = 1f;
 
     bool isShaking = false;
+    float activeMagnitude = 0f;
 
     private void Awake()
     {
@@ -36,13 +37,31 @@ public class CameraShake : MonoBehaviour
 
     static public void ShakeCamera()
     {
-        if (!S.isShaking)
-            S.StartCoroutine(S.Shake(S.shakeDuration, S.shakeMagnitude));
+        ShakeCamera(S.shakeDuration, S.shakeMagnitude);
+    }
+
+    static public void ShakeCamera(float _magnitude)
+    {
+        ShakeCamera(S.shakeDuration, _magnitude);
+    }
+
+    static public void ShakeCamera(float _duration, float _magnitude)
+    {
+        if (_magnitude >= S.activeMagnitude)
+        {
+            if (S.isShaking)
+            {
+                S.StopAllCoroutines();
+                S.isShaking = false;
+            }
+            S.StartCoroutine(S.Shake(_duration, _magnitude));
+        }
     }
 
     IEnumerator Shake(float _duration, float _magnitude)
     {
         isShaking = true;
+        activeMagnitude = _magnitude;
         float elapsed = 0f;
         float currMagnitude = _magnitude;
 
@@ -56,5 +75,6 @@ public class CameraShake : MonoBehaviour
 
         transform.position = transform.parent.transform.position;
         isShaking = false;
+        activeMagnitude = 0f;
     }
 }

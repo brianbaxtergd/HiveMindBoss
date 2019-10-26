@@ -6,25 +6,16 @@ using UnityEngine;
 [RequireComponent(typeof(ShimmerColor))]
 public class Drone : MonoBehaviour
 {
-    [Header("Inscribed")]
-    public int health;
-    public float moveSpeed;
-    public int attackDamage;
-    public Color hurtColor;
-    public float hurtTime;
-    public Color shimmerColor;
-    public float shimmerTime;
-
+    int index = 0; // Index position within Hive's activeDrones list.
+    int health;
     bool isAlive = true;
     bool isAttacking = false;
-
-    int index = 0; // Index position within Hive's activeDrones list.
     Vector3 targetPosition;
     Renderer rend;
     ShimmerColor shimCol;
     Color defaultColor;
 
-    private void Start()
+    private void Awake()
     {
         rend = GetComponent<Renderer>();
         shimCol = GetComponent<ShimmerColor>();
@@ -40,7 +31,7 @@ public class Drone : MonoBehaviour
         if (isAlive)
         {
             if (isAttacking && Vector3.Distance(transform.position, targetPosition) < 0.01f)
-                isAttacking = false;
+                IsAttacking = false;
         }
         else
         {
@@ -70,8 +61,25 @@ public class Drone : MonoBehaviour
     void UpdatePosition()
     {
         // Move toward target position.
-        float step = moveSpeed * Time.fixedDeltaTime;
+        float step = Hive.DronesSO.moveSpeed * Time.fixedDeltaTime;
         transform.position = Vector3.MoveTowards(transform.position, TargetPosition, step);
+    }
+
+    IEnumerator ChangeMaterialColor(Material _curMat, Material _newMat)
+    {
+        defaultColor = _newMat.GetColor("_EmissionColor");
+        shimCol.DefaultColor = _newMat.GetColor("_EmissionColor");
+        float elapsed = 0f;
+        yield return null;
+
+        while(elapsed < Hive.DronesSO.colorChangeTime)
+        {
+            rend.material.Lerp(_curMat, _newMat, elapsed / Hive.DronesSO.colorChangeTime);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        rend.material = _newMat;
     }
 
     public void TakeDamage(int _damage)
@@ -82,14 +90,12 @@ public class Drone : MonoBehaviour
         health = Mathf.Max(health - _damage, 0);
         if (health == 0)
             Death();
-
-        // Trigger shimmer effect.
-        Shimmer(hurtColor, hurtTime);
     }
 
     private void Death()
     {
         isAlive = false;
+        StartCoroutine(ChangeMaterialColor(rend.material, Hive.DronesSO.deadMaterial));
     }
 
     public void Attack(Vector3 _targetPosition)
@@ -102,12 +108,12 @@ public class Drone : MonoBehaviour
 
         isAttacking = true;
         TargetPosition = _targetPosition;
-        Shimmer();
+        StartCoroutine(ChangeMaterialColor(Hive.DronesSO.idleMaterial, Hive.DronesSO.attackMaterial));
     }
 
     public void Shimmer()
     {
-        shimCol.Shimmer(shimmerColor, shimmerTime);
+        shimCol.Shimmer(Hive.DronesSO.shimmerColor, Hive.DronesSO.shimmerTime);
     }
 
     public void Shimmer(Color _color, float _shimmerTime)
@@ -115,6 +121,13 @@ public class Drone : MonoBehaviour
         shimCol.Shimmer(_color, _shimmerTime);
     }
 
+    // Properties.
+
+    public int Health
+    {
+        get { return health; }
+        set { health = value; }
+    }
     public int Index
     {
         get { return index; }
@@ -133,11 +146,25 @@ public class Drone : MonoBehaviour
     public bool IsAttacking
     {
         get { return isAttacking; }
-        set { isAttacking = value; }
+        set
+        {
+            isAttacking = value;
+            if (!isAttacking)
+                StartCoroutine(ChangeMaterialColor(Hive.DronesSO.attackMaterial, Hive.DronesSO.idleMaterial));
+        }
     }
     public Color DefaultColor
     {
         get { return defaultColor; }
         set { defaultColor = value; }
+    }
+
+    // Statics.
+
+    static public Drone SpawnDrone()
+    {
+        GameObject dGO = Instantiate<GameObject>(Hive.DronesSO.dronePrefab);
+        Drone drone = dGO.GetComponent<Drone>();
+        return drone;
     }
 }

@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Renderer))]
 public class Bullet : MonoBehaviour
 {
     [Header("Inscribed")]
     public float speed;
     public float lifeTime;
-    public int damage = 34;
+    public int damage = 20;
 
     [HideInInspector]
     public static GameObject _bulletAnchor = null;
 
     Rigidbody rigid;
+    Renderer rend;
     [HideInInspector]
     public Vector3 aimDir;
 
@@ -25,6 +27,7 @@ public class Bullet : MonoBehaviour
 
         transform.LookAt(aimDir);
 
+        rend = GetComponent<Renderer>();
         rigid = GetComponent<Rigidbody>();
         rigid.velocity = transform.forward * speed;
 
@@ -38,7 +41,9 @@ public class Bullet : MonoBehaviour
         string tag = collision.gameObject.tag;
         if (tag == "Drone")
         {
-            collision.gameObject.GetComponent<Drone>().TakeDamage(damage);
+            Drone drone = collision.gameObject.GetComponent<Drone>();
+            drone.TakeDamage(damage);
+            drone.Shimmer(rend.material.GetColor("_EmissionColor"), Hive.DronesSO.hurtTime);
             Destroy(gameObject);
         }
     }

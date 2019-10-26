@@ -46,7 +46,7 @@ public class PlayerHealth : MonoBehaviour
             {
                 if (drone.IsAlive)
                 {
-                    TakeDamage(drone.attackDamage);
+                    TakeDamage(Hive.DronesSO.attackDamage);
                     if (drone.IsAttacking)
                         drone.IsAttacking = false;
                 }

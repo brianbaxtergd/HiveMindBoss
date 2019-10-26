@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29676962886883f439ec6d41d10b8aae, type: 3}
+  m_Name: DronesSO
+  m_EditorClassIdentifier: 
+  dronePrefab: {fileID: 6763504538030751742, guid: b11d2e6b8125dcd48a070262b1486c8e,
+    type: 3}
+  initialHealth: 100
+  attackDamage: 20
+  moveSpeed: 25
+  hurtTime: 0.5
+  shimmerTime: 1.5
+  shimmerColor: {r: 0, g: 0, b: 0, a: 1}
+  colorChangeTime: 0.5
+  idleMaterial: {fileID: 2100000, guid: 4dc9afd63f6504a4298f39a981bc3f91, type: 2}
+  attackMaterial: {fileID: 2100000, guid: 2db6582a965026b4bb71662a33a1e768, type: 2}
+  deadMaterial: {fileID: 2100000, guid: cb0a77c7625c2914d970a1c9eba990ab, type: 2}
+  volume: 24.875622
+  radius: 1.8109027
+  scale: {x: 3.6218054, y: 3.6218054, z: 3.6218054}

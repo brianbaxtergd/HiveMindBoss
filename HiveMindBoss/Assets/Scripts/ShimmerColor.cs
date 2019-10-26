@@ -64,4 +64,10 @@ public class ShimmerColor : MonoBehaviour
 
         isShimmering = false;
     }
+
+    public Color DefaultColor
+    {
+        get { return defaultColor; }
+        set { defaultColor = value; }
+    }
 }

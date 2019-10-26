@@ -7,7 +7,8 @@ public class PlayerCombat : MonoBehaviour
     [Header("Inscribed")]
     public GameObject bulletPrefab;
     public float shotCooldownTime;
-    public float crossHairSpeed = 10f;
+    public float shotCameraShakeMagnitude;
+    public float shotCameraShakeDuration;
 
     float shotCooldown;
     bool useLeftBarrel = true;
@@ -45,9 +46,10 @@ public class PlayerCombat : MonoBehaviour
 
     void Update()
     {
+        // Cooldown timer.
         if (shotCooldown > 0f)
             shotCooldown -= Time.deltaTime;
-
+        // Firing.
         if (Input.GetKey(KeyCode.Mouse0))
         {
             if(shotCooldown <= 0)
@@ -74,6 +76,8 @@ public class PlayerCombat : MonoBehaviour
         // Play fire audio.
         AudioSource fireAudio = (useLeftBarrel) ? leftGunAudio : rightGunAudio;
         fireAudio.Play();
+        // Shake camera.
+        CameraShake.ShakeCamera(shotCameraShakeDuration, shotCameraShakeMagnitude);
         // Swap barrels for next shot.
         useLeftBarrel = !useLeftBarrel;
     }
