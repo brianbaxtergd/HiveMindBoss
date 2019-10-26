@@ -6,7 +6,11 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Inscribed")]
     public float speedMax;
+    public float tiltSpeed;
     public float tiltMax;
+    public float distanceFromHive;
+    public float yMin;
+    public float yMax;
 
     Transform hive;
     Transform guns;
@@ -45,15 +49,27 @@ public class PlayerMovement : MonoBehaviour
         float tiltAmount = -hor * tiltMax;
         Quaternion curRot = guns.localRotation;
         Quaternion goalRot = Quaternion.Euler(0f, 0f, tiltAmount);
-        curRot = Quaternion.Slerp(curRot, goalRot, 4f * Time.fixedDeltaTime);
+        curRot = Quaternion.Slerp(curRot, goalRot, tiltSpeed * Time.fixedDeltaTime);
         guns.localRotation = curRot;
         crosshair.localRotation = curRot;
 
         if (Mathf.Abs(ver) > 0f)
         {
             // Move up/down.
-            transform.RotateAround(hive.position, Vector3.right, Input.GetAxis("Vertical") * speedMax * Time.fixedDeltaTime);
+            transform.RotateAround(hive.position, transform.right, Input.GetAxis("Vertical") * speedMax * Time.fixedDeltaTime);
+
+            Vector3 posYClamped = transform.position;
+            posYClamped.y = Mathf.Clamp(transform.position.y, yMin, yMax);
+            transform.position = posYClamped;
+
             transform.LookAt(hive.position);
+
+            float dist = Vector3.Distance(transform.position, hive.position);
+            if (dist < distanceFromHive)
+            {
+                float distDelta = distanceFromHive - dist;
+                transform.position += -transform.forward * distDelta;
+            }
         }
     }
 }

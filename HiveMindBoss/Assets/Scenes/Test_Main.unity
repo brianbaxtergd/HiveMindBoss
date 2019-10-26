@@ -1078,8 +1078,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 908499037}
-  - component: {fileID: 908499038}
   - component: {fileID: 908499039}
+  - component: {fileID: 908499038}
   - component: {fileID: 908499040}
   - component: {fileID: 908499041}
   m_Layer: 0
@@ -1138,7 +1138,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speedMax: 10
+  tiltSpeed: 4
   tiltMax: 15
+  distanceFromHive: 50
+  yMin: -20
+  yMax: 20
 --- !u!82 &908499040
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1146,7 +1150,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 908499036}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 6134e1c2b39bd784a9e9ffa8a7a6463c, type: 3}
@@ -1242,7 +1246,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 908499036}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: ee51add87f8662141ab565aeb97539c8, type: 3}
@@ -1861,6 +1865,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1518262799}
   - component: {fileID: 1518262800}
+  - component: {fileID: 1518262801}
   m_Layer: 0
   m_Name: Hive
   m_TagString: Untagged
@@ -1911,6 +1916,18 @@ MonoBehaviour:
   activeDrones: []
   dronePositions: []
   hiveRotation: {x: 0, y: 0, z: 0}
+--- !u!114 &1518262801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518262798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b144d4023e6afb6429ff7e0a763d210e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1571018620
 GameObject:
   m_ObjectHideFlags: 0

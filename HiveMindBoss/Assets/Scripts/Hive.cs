@@ -60,10 +60,7 @@ public class Hive : MonoBehaviour
     {
         if (_S == null)
             _S = this;
-    }
 
-    private void Start()
-    {
         // Initialize data structures.
         activeDrones = new List<Drone>();
         dronePositions = new List<Vector3>();
@@ -82,7 +79,10 @@ public class Hive : MonoBehaviour
         // Spawn empty game object to act as drone anchor in hierarchy.
         droneAnchor = new GameObject("DroneAnchor");
         droneAnchor.transform.SetParent(transform);
+    }
 
+    private void Start()
+    {
         // Initialize dronePositions and instantiate drones.
         DefineDronePositions(eHiveTopologies.sphere);
         SetState(eHiveStates.passive);
