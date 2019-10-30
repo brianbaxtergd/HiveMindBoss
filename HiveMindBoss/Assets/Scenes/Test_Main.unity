@@ -554,7 +554,7 @@ Transform:
   m_GameObject: {fileID: 701381875}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 3}
   m_Children: []
   m_Father: {fileID: 908499037}
   m_RootOrder: 3
@@ -1125,6 +1125,11 @@ MonoBehaviour:
   shotCooldownTime: 0.1
   shotCameraShakeMagnitude: 0.1
   shotCameraShakeDuration: 0.25
+  barrelCoolMaterial: {fileID: 2100000, guid: ce543f40aea0c3143bdfed4ba6a2f22e, type: 2}
+  barrelHeatMaterial: {fileID: 2100000, guid: 3a34dadb4e0242547a86a84e00c4fa04, type: 2}
+  overheatTime: 2.5
+  isOverheating: 0
+  heatLevel: 0
 --- !u!114 &908499039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1150,7 +1155,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 908499036}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 6134e1c2b39bd784a9e9ffa8a7a6463c, type: 3}
@@ -1246,7 +1251,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 908499036}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: ee51add87f8662141ab565aeb97539c8, type: 3}
@@ -1855,6 +1860,98 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1247105966}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1338105846
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1338105850}
+  - component: {fileID: 1338105849}
+  - component: {fileID: 1338105848}
+  - component: {fileID: 1338105847}
+  m_Layer: 0
+  m_Name: Planet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!135 &1338105847
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338105846}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1338105848
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338105846}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a16fe545f6472504ba220ea5f4d794c4, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &1338105849
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338105846}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1338105850
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338105846}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -300, z: 0}
+  m_LocalScale: {x: 500, y: 500, z: 500}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1518262798
 GameObject:
   m_ObjectHideFlags: 0
@@ -1902,13 +1999,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dronesSO: {fileID: 11400000, guid: f5be0b7e84f0b414997b432d46a11d36, type: 2}
-  droneCount: 250
+  droneCount: 10
   droneDistance: 20
-  droneTimeBetweenSpawns: 0.01
   hiveRotationSpeed: 3.141595
   hiveRotationIdle: {x: 0, y: -12, z: 0}
   hiveRotationAttacking: {x: 0, y: -60, z: 0}
   passiveStateTime: 7
+  spawnDronesStateTime: 1
   idleStateTime: 4
   attackStateDroneCount: 5
   hiveState: 0
@@ -1923,7 +2020,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1518262798}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b144d4023e6afb6429ff7e0a763d210e, type: 3}
   m_Name: 
@@ -2145,7 +2242,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 676d03d5845ffbe44b862cb5bde7c975, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
-  m_Pitch: 1
+  m_Pitch: 0.9
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -2240,8 +2337,8 @@ GameObject:
   - component: {fileID: 1845653101}
   - component: {fileID: 1845653100}
   - component: {fileID: 1845653099}
-  - component: {fileID: 1845653104}
   - component: {fileID: 1845653103}
+  - component: {fileID: 1845653104}
   m_Layer: 0
   m_Name: HiveCore
   m_TagString: Untagged
@@ -2335,7 +2432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialVolume: 5000
-  scaleTime: 1
+  scaleTime: 0.25
   rectangularPrismScaleRatio: {x: 4, y: 9, z: 1}
   cubeScaleRatio: {x: 1, y: 1, z: 1}
   colorChangeTime: 2

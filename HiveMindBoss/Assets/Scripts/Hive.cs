@@ -9,11 +9,10 @@ public class Hive : MonoBehaviour
     public enum eHiveStates
     {
         passive,
-        spawningDrones,
         idle,
-        attack,
+        attackDronesOneByOne,
+        attackLaser,
     }
-
     public enum eHiveTopologies
     {
         sphere,
@@ -23,31 +22,24 @@ public class Hive : MonoBehaviour
 
     [Header("Inscribed - Drones")]
     public DronesScriptableObject dronesSO;
-    [Range(10, 250)]
-    public int droneCount;
-    [Range(5, 25)]
-    public float droneDistance; // From center of Hive.
-    public float droneTimeBetweenSpawns;
+    [Range(10, 250)] public int droneCount;
+    [Range(5, 25)] public float droneDistance; // From center of Hive.
 
     [Header("Inscribed - Hive")]
     public float hiveRotationSpeed;
     public Vector3 hiveRotationIdle;
     public Vector3 hiveRotationAttacking;
-    public float passiveStateTime = 10f;
-    public float idleStateTime = 10f;
-    public int attackStateDroneCount = 5;
+    public float passiveStateTime;
+    public float spawnDronesStateTime;
+    public float idleStateTime;
+    public int attackStateDroneCount;
 
     [Header("Dynamic")]
-    [SerializeField]
-    eHiveStates hiveState;
-    [SerializeField]
-    eHiveTopologies hiveTopology;
-    [SerializeField]
-    List<Drone> activeDrones;
-    [SerializeField]
-    List<Vector3> dronePositions;
-    [SerializeField]
-    Vector3 hiveRotation = Vector3.zero;
+    [SerializeField] eHiveStates hiveState;
+    [SerializeField] eHiveTopologies hiveTopology;
+    [SerializeField] List<Drone> activeDrones;
+    [SerializeField] List<Vector3> dronePositions;
+    [SerializeField] Vector3 hiveRotation = Vector3.zero;
     Vector3 hiveRotationTarget = Vector3.zero;
     GameObject player;
     HiveCore core;
@@ -83,9 +75,14 @@ public class Hive : MonoBehaviour
 
     private void Start()
     {
+        hiveTopology = eHiveTopologies.sphere;
+
         // Initialize dronePositions and instantiate drones.
-        DefineDronePositions(eHiveTopologies.sphere);
-        SetState(eHiveStates.passive);
+        //DefineDronePositions(eHiveTopologies.sphere);
+        core.SetHiveCoreShape(HiveCore.eHiveCoreShapes.cube);
+        core.Volume = core.Volume;
+        SpawnDrones();
+        SetState(eHiveStates.idle);
     }
 
     private void FixedUpdate()
@@ -100,22 +97,30 @@ public class Hive : MonoBehaviour
                 core.transform.LookAt(newDir);
                 if (hiveStateTime >= passiveStateTime)
                 {
-                    SetState(eHiveStates.spawningDrones);
+                    SetState(eHiveStates.idle);
+                    SpawnDrones();
                     core.SetHiveCoreShape(HiveCore.eHiveCoreShapes.cube);
                     core.Volume = core.Volume;
                 }
                 break;
-            case eHiveStates.spawningDrones:
-                break;
             case eHiveStates.idle:
-                //RotateDronePositions(hiveRotationIdle * Time.fixedDeltaTime);
                 RotateDronePositions(hiveRotation * Time.fixedDeltaTime);
                 if (hiveStateTime >= idleStateTime)
-                    SetState(eHiveStates.attack);
+                {
+                    eHiveStates[] potentialAttackStates = { eHiveStates.attackDronesOneByOne, eHiveStates.attackLaser };
+                    eHiveStates randomAttackState = potentialAttackStates[Random.Range(0, potentialAttackStates.Length)];
+                    SetState(randomAttackState);
+                }
                 break;
-            case eHiveStates.attack:
-                //RotateDronePositions(hiveRotationAttacking * Time.fixedDeltaTime);
+            case eHiveStates.attackDronesOneByOne:
                 RotateDronePositions(hiveRotation * Time.fixedDeltaTime);
+                break;
+            case eHiveStates.attackLaser:
+                if (!laser.IsFiring)
+                {
+                    SpawnDrones();
+                    SetState(eHiveStates.idle);
+                }
                 break;
             default:
                 break;
@@ -137,26 +142,25 @@ public class Hive : MonoBehaviour
         // Reset state timer.
         hiveStateTime = 0f;
 
+        hiveState = _newState;
         // Initialize new state.
-        switch (_newState)
+        switch (hiveState)
         {
             case eHiveStates.passive:
-                break;
-            case eHiveStates.spawningDrones:
-                StartCoroutine(SpawnDrones());
-                core.IsActive = true;
-                hiveRotationTarget = hiveRotationIdle;
                 break;
             case eHiveStates.idle:
                 core.IsActive = false;
                 hiveRotationTarget = hiveRotationIdle;
-                // Trigger shimmer effect on all drones.
-                //StartCoroutine(DroneShimmer());
                 break;
-            case eHiveStates.attack:
+            case eHiveStates.attackDronesOneByOne:
                 // Begin sending drones to attack player.
                 StartCoroutine(DroneAttack(attackStateDroneCount));
                 hiveRotationTarget = hiveRotationAttacking;
+                break;
+            case eHiveStates.attackLaser:
+                KillDrones();
+                core.IsActive = true;
+                laser.Fire();
                 break;
             default:
                 break;
@@ -234,6 +238,17 @@ public class Hive : MonoBehaviour
         }
     }
 
+    void KillDrones()
+    {
+        // Update droneCount to match number of active drones. This ensures drones killed by player do not respawn if SpawnDrones() coroutine is called following this function.
+        droneCount = activeDrones.Count;
+        // Destroy all drones.
+        foreach (Drone drone in activeDrones)
+        {
+            drone.Death();
+        }
+    }
+
     Drone GetDroneNearestToPlayer()
     {
         float nearestDist = 1000f;
@@ -257,17 +272,21 @@ public class Hive : MonoBehaviour
         return activeDrones[nearestDroneIndex];
     }
 
-    IEnumerator SpawnDrones()
+    void SpawnDrones()
     {
         if (activeDrones.Count > 0)
             Debug.LogError("Hive:SpawnDrones() - activeDrones not cleared before spawning new drones.");
+
+        // Activate core.
+        core.IsActive = true;
+
+        // Redefine dronePositions.
+        DefineDronePositions(hiveTopology);
 
         // Update volume & scale of dronesSO.
         dronesSO.volume = core.Volume / (droneCount + 1);
         dronesSO.radius = Mathf.Pow((3f * dronesSO.volume) / (4f * Mathf.PI), 1f / 3f);
         dronesSO.scale = new Vector3(dronesSO.radius * 2f, dronesSO.radius * 2f, dronesSO.radius * 2f);
-
-        yield return null;
 
         for (int i = 0; i < droneCount; i++)
         {
@@ -279,14 +298,9 @@ public class Hive : MonoBehaviour
             drone.transform.SetParent(droneAnchor.transform);
             drone.gameObject.name = "Drone_" + i.ToString("000");
             activeDrones.Add(drone);
-
-            // Remove volume from core.
-            core.Volume -= dronesSO.volume;
-
-            yield return new WaitForSeconds(droneTimeBetweenSpawns);
         }
 
-        SetState(eHiveStates.idle);
+        core.Volume -= dronesSO.volume * droneCount;
     }
 
     IEnumerator DroneAttack(int _droneCount)
@@ -322,6 +336,7 @@ public class Hive : MonoBehaviour
     {
         // Trigger core shimmer.
         // TODO: Fix errors w/ core shimmering.
+        //_S.core.Shi
         //_S.core.GetComponent<ShimmerColor>().Shimmer(Hive.DronesSO.idleMaterial.GetColor("_EmissionColor"));
         // Add drone volume to core.
         _S.core.Volume += _S.core.SphereVolume(_S.activeDrones[_index].transform.localScale.x / 2f);

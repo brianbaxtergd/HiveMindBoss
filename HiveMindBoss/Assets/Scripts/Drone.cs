@@ -13,14 +13,14 @@ public class Drone : MonoBehaviour
     Vector3 targetPosition;
     Renderer rend;
     ShimmerColor shimCol;
-    Color defaultColor;
+    //Color defaultColor;
 
     private void Awake()
     {
         rend = GetComponent<Renderer>();
         shimCol = GetComponent<ShimmerColor>();
 
-        defaultColor = rend.material.GetColor("_EmissionColor");
+        //defaultColor = Hive.DronesSO.idleMaterial.GetColor("_EmissionColor"); //rend.material.GetColor("_EmissionColor");
     }
 
     private void FixedUpdate()
@@ -67,7 +67,7 @@ public class Drone : MonoBehaviour
 
     IEnumerator ChangeMaterialColor(Material _curMat, Material _newMat)
     {
-        defaultColor = _newMat.GetColor("_EmissionColor");
+        //defaultColor = _newMat.GetColor("_EmissionColor");
         shimCol.DefaultColor = _newMat.GetColor("_EmissionColor");
         float elapsed = 0f;
         yield return null;
@@ -92,9 +92,10 @@ public class Drone : MonoBehaviour
             Death();
     }
 
-    private void Death()
+    public void Death()
     {
         isAlive = false;
+        health = 0;
         StartCoroutine(ChangeMaterialColor(rend.material, Hive.DronesSO.deadMaterial));
     }
 
@@ -153,11 +154,13 @@ public class Drone : MonoBehaviour
                 StartCoroutine(ChangeMaterialColor(Hive.DronesSO.attackMaterial, Hive.DronesSO.idleMaterial));
         }
     }
+    /*
     public Color DefaultColor
     {
         get { return defaultColor; }
         set { defaultColor = value; }
     }
+    */
 
     // Statics.
 

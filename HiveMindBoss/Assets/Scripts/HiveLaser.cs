@@ -29,17 +29,24 @@ public class HiveLaser : MonoBehaviour
     eHiveLaserStates state;
 
     Transform playerTrans;
+    Transform coreTrans;
     float minZScale;
     float zScale;
     Vector3 idleScale;
     Vector3 chargeScale;
 
-    private void Start()
+    private void Awake()
     {
+        coreTrans = GameObject.Find("HiveCore").transform;
+        if (coreTrans == null)
+            Debug.LogError("HiveLaser:Awake() - coreTrans is null.");
         playerTrans = GameObject.Find("Player").transform;
         if (playerTrans == null)
-            Debug.LogError("HiveLaser:Start() - playerTrans is null.");
+            Debug.LogError("HiveLaser:Awake() - playerTrans is null.");
+    }
 
+    private void Start()
+    {
         zScale = minScale.z;
         minZScale = zScale;
         idleScale = Vector3.zero;
@@ -93,8 +100,7 @@ public class HiveLaser : MonoBehaviour
         }
 
         // Update position.
-        transform.localPosition = transform.forward * (minScale.z * transform.localScale.z - transform.lossyScale.z) * 0.5f; // Not entirely sure why this works as intended.. although I've noted it only works when minScale.z = 3;
-
+        transform.localPosition = (transform.forward * (coreTrans.localScale.x * 0.85f)) + transform.forward * (minScale.z * transform.localScale.z - transform.lossyScale.z) * 0.5f; // Not entirely sure why this works as intended.. although I've noted it only works when minScale.z = 3;
 
         // Update state timer.
         stateTimer += Time.deltaTime;
@@ -153,5 +159,9 @@ public class HiveLaser : MonoBehaviour
     public int Damage
     {
         get { return damage; }
+    }
+    public bool IsFiring
+    {
+        get { return (state != eHiveLaserStates.idle); }
     }
 }

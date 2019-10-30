@@ -13,7 +13,7 @@ public class ShimmerColor : MonoBehaviour
     Renderer rend;
     Coroutine curRoutine;
 
-    private void Start()
+    private void Awake()
     {
         rend = GetComponent<Renderer>();
         defaultColor = rend.material.GetColor("_EmissionColor");

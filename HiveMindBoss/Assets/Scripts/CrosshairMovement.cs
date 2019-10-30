@@ -11,13 +11,10 @@ public class CrosshairMovement : MonoBehaviour
     static Transform rightCross;
     Transform guns;
 
-    private void Start()
+    private void Awake()
     {
         if (_S == null)
             _S = this;
-
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Confined;
 
         leftCross = GameObject.Find("CrosshairLeftVert").transform;
         if (leftCross == null)
@@ -29,6 +26,12 @@ public class CrosshairMovement : MonoBehaviour
         guns = GameObject.Find("Guns").transform;
         if (guns == null)
             Debug.LogError("CrosshairMovement:Start() - guns is null.");
+    }
+
+    private void Start()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     private void Update()

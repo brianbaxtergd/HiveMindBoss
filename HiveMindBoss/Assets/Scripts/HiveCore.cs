@@ -14,7 +14,7 @@ public class HiveCore : MonoBehaviour
 
     [Header("Inscribed")]
     public float initialVolume;
-    public float scaleTime = 1f;
+    public float scaleTime;
     public Vector3 rectangularPrismScaleRatio;
     public Vector3 cubeScaleRatio;
     public float colorChangeTime;
@@ -22,17 +22,16 @@ public class HiveCore : MonoBehaviour
     public Material inactiveMaterial;
 
     [Header("Dynamic")]
-    [SerializeField]
-    eHiveCoreShapes hiveCoreShape;
-    [SerializeField]
-    float volume;
-    [SerializeField]
-    float scaleFactor = 1f;
+    [SerializeField] eHiveCoreShapes hiveCoreShape;
+    [SerializeField] float volume;
+    [SerializeField] float scaleFactor = 1f;
 
+    Vector3 targetScale;
+    Vector3 scaleSpeed; // This is changed dynamically by smooth damping.
     Renderer rend;
     ShimmerColor shimCol;
     Vector3 scaleRatio;
-    bool isActive = false; // Core is "Active" while spawning drones.
+    bool isActive = false; // Core is "Active" while spawning drones and firing lasers.
 
     private void Awake()
     {
@@ -41,11 +40,26 @@ public class HiveCore : MonoBehaviour
 
         SetHiveCoreShape(eHiveCoreShapes.rectangularPrism);
         Volume = initialVolume;
+        transform.localScale = targetScale;
+    }
+
+    private void Start()
+    {
+
+    }
+
+    private void Update()
+    {
+        if (transform.localScale != targetScale)
+        {
+            transform.localScale = Vector3.SmoothDamp(transform.localScale, targetScale, ref scaleSpeed, scaleTime);
+        }
     }
 
     public void SetHiveCoreShape(eHiveCoreShapes _newShape)
     {
-        switch (_newShape)
+        hiveCoreShape = _newShape;
+        switch (hiveCoreShape)
         {
             case eHiveCoreShapes.cube:
                 scaleRatio = cubeScaleRatio;
@@ -56,14 +70,12 @@ public class HiveCore : MonoBehaviour
             default:
                 break;
         }
-        hiveCoreShape = _newShape;
     }
 
     IEnumerator ChangeMaterialColor(Material _curMat, Material _newMat)
     {
         shimCol.DefaultColor = _newMat.GetColor("_EmissionColor");
         float elapsed = 0f;
-        yield return null;
 
         while (elapsed < colorChangeTime)
         {
@@ -83,7 +95,8 @@ public class HiveCore : MonoBehaviour
             volume = value;
             // Scale transform to new volume.
             scaleFactor = RectangulrPrismScaleFactor(volume);
-            transform.localScale = scaleRatio * scaleFactor;
+            //transform.localScale = scaleRatio * scaleFactor;
+            targetScale = scaleRatio * scaleFactor;
         }
     }
 
@@ -132,7 +145,6 @@ public class HiveCore : MonoBehaviour
     {
         Debug.Log("(4, 9, 1) Volume: " + RectangularPrismVolume(scaleRatio * scaleFactor) + " at Scale Factor: " + scaleFactor);
     }
-
     public void DebugLogCoreScaleFactor(float _volume)
     {
         Debug.Log("Scale factor of volume: " + _volume + ", is equal to: " + RectangulrPrismScaleFactor(_volume));
