@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: fe232082ab7ded94ea39b28f945d4b44, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
+  m_IndirectSpecularColor: {r: 0.19123304, g: 0.14318025, b: 0.15327477, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1351,6 +1351,7 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
+  - component: {fileID: 963194231}
   - component: {fileID: 963194229}
   - component: {fileID: 963194230}
   m_Layer: 12
@@ -1377,7 +1378,7 @@ Camera:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -1499,6 +1500,20 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!114 &963194231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5af48a56df1664fb25d3b3610bb234, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skyboxes:
+  - {fileID: 2100000, guid: fe232082ab7ded94ea39b28f945d4b44, type: 2}
 --- !u!1 &1047948766
 GameObject:
   m_ObjectHideFlags: 0
@@ -1999,7 +2014,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dronesSO: {fileID: 11400000, guid: f5be0b7e84f0b414997b432d46a11d36, type: 2}
-  droneCount: 10
+  droneCount: 250
   droneDistance: 20
   hiveRotationSpeed: 3.141595
   hiveRotationIdle: {x: 0, y: -12, z: 0}
