@@ -18,6 +18,7 @@ public class Bullet : MonoBehaviour
     Renderer rend;
     [HideInInspector]
     public Vector3 aimDir;
+    bool isDestroyed = false; // Sets to true on first collision with enemy. This keeps a single bullet from colliding with multiple enemies if they are overlapping.
 
     void Start()
     {
@@ -39,8 +40,9 @@ public class Bullet : MonoBehaviour
         // Note: Collision with HiveSphere is in HiveSphere script.
 
         string tag = collision.gameObject.tag;
-        if (tag == "Drone")
+        if (tag == "Drone" && !isDestroyed)
         {
+            isDestroyed = true;
             Drone drone = collision.gameObject.GetComponent<Drone>();
             drone.TakeDamage(damage);
             drone.Shimmer(rend.material.GetColor("_EmissionColor"), Hive.DronesSO.hurtTime);

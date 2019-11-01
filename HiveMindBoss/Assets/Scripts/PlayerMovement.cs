@@ -50,6 +50,8 @@ public class PlayerMovement : MonoBehaviour
         Quaternion curRot = guns.localRotation;
         Quaternion goalRot = Quaternion.Euler(0f, 0f, tiltAmount);
         curRot = Quaternion.Slerp(curRot, goalRot, tiltSpeed * Time.fixedDeltaTime);
+        //transform.localRotation = curRot;
+        //GameObject.Find("PlayerTiltRig").transform.localRotation = curRot;
         guns.localRotation = curRot;
         crosshair.localRotation = curRot;
 

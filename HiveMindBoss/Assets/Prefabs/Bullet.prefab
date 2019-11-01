@@ -124,5 +124,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 60
   lifeTime: 3
-  damage: 20
+  damage: 100
   aimDir: {x: 0, y: 0, z: 0}

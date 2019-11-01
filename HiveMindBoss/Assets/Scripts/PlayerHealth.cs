@@ -19,6 +19,19 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField]
     float hurtCooldown;
 
+    AudioSourceController hurtAudioController;
+    AudioSource deathAudio;
+
+    private void Awake()
+    {
+        hurtAudioController = GameObject.Find("PlayerAudioHurt").GetComponent<AudioSourceController>();
+        if (hurtAudioController == null)
+            Debug.LogError("PlayerHealth:Awake() - AudioSourceController hurtAudioController is null.");
+        deathAudio = GameObject.Find("PlayerAudioDeath").GetComponent<AudioSource>();
+        if (deathAudio == null)
+            Debug.LogError("PlayerHealth:Awake() - AudioSource deathAudio is null.");
+    }
+
     private void Start()
     {
         healthText.text = "[HP: " + health + " ]";
@@ -44,7 +57,7 @@ public class PlayerHealth : MonoBehaviour
             Drone drone = other.gameObject.GetComponent<Drone>();
             if (drone != null)
             {
-                if (drone.IsAlive)
+                if (drone.IsAlive && drone.IsAttacking)
                 {
                     TakeDamage(Hive.DronesSO.attackDamage);
                     if (drone.IsAttacking)
@@ -79,11 +92,17 @@ public class PlayerHealth : MonoBehaviour
 
         CameraShake.ShakeCamera();
 
+
         healthText.text = "[HP: " + health + " ]";
 
-        if (health == 0)
+        if (health > 0)
+        {
+            hurtAudioController.PlayRandomAudioClip();
+        }
+        else
         {
             Debug.Log("Player has died");
+            deathAudio.Play();
             isAlive = false;
         }
     }

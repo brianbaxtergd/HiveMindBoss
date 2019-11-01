@@ -10,6 +10,7 @@ public class Drone : MonoBehaviour
     int health;
     bool isAlive = true;
     bool isAttacking = false;
+    public bool recalledByHive = false;
     Vector3 targetPosition;
     Renderer rend;
     ShimmerColor shimCol;

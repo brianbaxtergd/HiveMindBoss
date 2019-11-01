@@ -162,6 +162,6 @@ public class HiveLaser : MonoBehaviour
     }
     public bool IsFiring
     {
-        get { return (state != eHiveLaserStates.idle); }
+        get { return (state != eHiveLaserStates.idle && state != eHiveLaserStates.retract); }
     }
 }
