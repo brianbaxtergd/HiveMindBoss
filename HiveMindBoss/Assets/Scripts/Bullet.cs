@@ -48,6 +48,16 @@ public class Bullet : MonoBehaviour
             drone.Shimmer(rend.material.GetColor("_EmissionColor"), Hive.DronesSO.hurtTime);
             Destroy(gameObject);
         }
+
+        if (tag == "HiveCore")
+        {
+            HiveCore hC = collision.gameObject.GetComponent<HiveCore>();
+            if (hC.IsActive)
+            {
+                hC.TakeDamage(damage);
+            }
+            Destroy(gameObject);
+        }
     }
 
     IEnumerator DestroySelfInSeconds(float _seconds)

@@ -61,8 +61,9 @@ public class HiveLaser : MonoBehaviour
         switch (state)
         {
             case eHiveLaserStates.idle:
-                if (Input.GetKeyDown(KeyCode.Space))
-                    Fire();
+                // TODO: Remove commented code when done testing hiveLaser.
+                //if (Input.GetKeyDown(KeyCode.Space))
+                //    Fire();
                 break;
             case eHiveLaserStates.charge:
                 transform.localScale = Vector3.Lerp(idleScale, chargeScale, stateTimer / (chargeTime * 0.34f));

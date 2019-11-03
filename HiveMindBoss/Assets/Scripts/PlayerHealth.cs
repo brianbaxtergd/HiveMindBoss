@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PlayerHealth : MonoBehaviour
 {
     [Header("Inscribed")]
-    public Text healthText;
+    //public Text healthText;
     public UIPanel panel;
     public int health;
     public float hurtCooldownTime;
@@ -34,7 +34,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void Start()
     {
-        healthText.text = "[HP: " + health + " ]";
+        panel.SetPlayerHealth(health);
     }
 
     void Update()
@@ -92,8 +92,7 @@ public class PlayerHealth : MonoBehaviour
 
         CameraShake.ShakeCamera();
 
-
-        healthText.text = "[HP: " + health + " ]";
+        panel.SetPlayerHealth(health);
 
         if (health > 0)
         {

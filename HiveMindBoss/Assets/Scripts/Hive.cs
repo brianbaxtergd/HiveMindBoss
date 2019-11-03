@@ -145,9 +145,13 @@ public class Hive : MonoBehaviour
                 }
                 break;
             case eHiveStates.levelUp:
+                //float goalHealthRatio = (float)core.healthMax / (float)(hiveLevelMax - hiveLevel);
+                //float goalHealthRatio = (float)core.healthMax * (1f - 1f / ((float)hiveLevel / (float)hiveLevelMax));
                 if (hiveStateTime >= levelUpStateTime)
+                //if (core.Health < core.healthMax)
                 {
                     spawnDronesAudio.Play(); // TODO: See comment in SpawnDrones().
+                    core.IsActive = false;
                     SpawnDrones();
                     SetState(eHiveStates.idle);
                 }
@@ -197,6 +201,7 @@ public class Hive : MonoBehaviour
                 break;
             case eHiveStates.levelUp:
                 Debug.Log("Hive leveled up to level: " + hiveLevel + ".");
+                core.IsActive = true;
                 levelUpAudio.Play();
                 DroneCount = initialDroneCount[hiveLevel];
                 break;
@@ -368,7 +373,7 @@ public class Hive : MonoBehaviour
         }
 
         // Activate core.
-        core.IsActive = true;
+        //core.IsActive = true;
         // Update core volume.
         core.Volume -= dronesSO.volume * DroneCount;
     }

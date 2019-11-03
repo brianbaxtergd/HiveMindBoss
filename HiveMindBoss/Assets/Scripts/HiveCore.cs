@@ -13,6 +13,7 @@ public class HiveCore : MonoBehaviour
     }
 
     [Header("Inscribed")]
+    public int health;
     public float initialVolume;
     public float scaleTime;
     public Vector3 rectangularPrismScaleRatio;
@@ -26,10 +27,12 @@ public class HiveCore : MonoBehaviour
     [SerializeField] float volume;
     [SerializeField] float scaleFactor = 1f;
 
+    [HideInInspector] public int healthMax;
     Vector3 targetScale;
     Vector3 scaleSpeed; // This is changed dynamically by smooth damping.
     Renderer rend;
     ShimmerColor shimCol;
+    UIPanel panel;
     Vector3 scaleRatio;
     bool isActive = false; // Core is "Active" while spawning drones and firing lasers.
 
@@ -37,6 +40,9 @@ public class HiveCore : MonoBehaviour
     {
         rend = GetComponent<Renderer>();
         shimCol = GetComponent<ShimmerColor>();
+        panel = GameObject.Find("UIPanel").GetComponent<UIPanel>();
+        if (panel == null)
+            Debug.LogError("HiveCore:Awake() - UIPanel panel is null.");
 
         SetHiveCoreShape(eHiveCoreShapes.rectangularPrism);
         Volume = initialVolume;
@@ -45,7 +51,7 @@ public class HiveCore : MonoBehaviour
 
     private void Start()
     {
-
+        healthMax = health;
     }
 
     private void Update()
@@ -54,6 +60,12 @@ public class HiveCore : MonoBehaviour
         {
             transform.localScale = Vector3.SmoothDamp(transform.localScale, targetScale, ref scaleSpeed, scaleTime);
         }
+    }
+
+    public void TakeDamage(int _damage)
+    {
+        Health -= _damage;
+        panel.SetHiveHealth(Health, healthMax);
     }
 
     public void SetHiveCoreShape(eHiveCoreShapes _newShape)
@@ -137,6 +149,12 @@ public class HiveCore : MonoBehaviour
                     StartCoroutine(ChangeMaterialColor(activeMaterial, inactiveMaterial));
             }
         }
+    }
+
+    public int Health
+    {
+        get { return health; }
+        set { health = value; }
     }
 
     // Debugging.

@@ -10,14 +10,25 @@ public class UIPanel : MonoBehaviour
     public Color damagePanelColor;
 
     Image panelImage;
+    Text playerHealthText;
+    HiveHealthScrollbar hiveHealthScrollbar;
+
     Color defaultColor;
     float damagePanelCooldownTime;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         panelImage = GetComponent<Image>();
+        playerHealthText = GameObject.Find("PlayerHealthText").GetComponent<Text>();
+        if (playerHealthText == null)
+            Debug.LogError("UIPanel:Awake() - Text playerHealthText is null.");
+        hiveHealthScrollbar = GetComponentInChildren<HiveHealthScrollbar>();
+        if (hiveHealthScrollbar == null)
+            Debug.LogError("UIPanel:Awake() - HiveHealthScrollbar hiveHealthScrollbar is null.");
+    }
 
+    void Start()
+    {
         defaultColor = Color.clear;
 
         PlayerHealth pH = GameObject.Find("Shield").GetComponent<PlayerHealth>();
@@ -35,6 +46,16 @@ public class UIPanel : MonoBehaviour
     public void TriggerUIDamage()
     {
         StartCoroutine(DamagePanel(damagePanelCooldownTime));
+    }
+
+    public void SetPlayerHealth(int _health)
+    {
+        playerHealthText.text = "[HP: " + _health + " ]";
+    }
+
+    public void SetHiveHealth(int _health, int _maxHealth)
+    {
+        hiveHealthScrollbar.SetHiveHealth(_health, _maxHealth);
     }
 
     IEnumerator DamagePanel(float _fadeTime)
