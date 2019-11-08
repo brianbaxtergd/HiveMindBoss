@@ -10,6 +10,7 @@ public class Bullet : MonoBehaviour
     public float speed;
     public float lifeTime;
     public int damage = 20;
+    public GameObject collisionParticlesPrefab;
 
     [HideInInspector]
     public static GameObject _bulletAnchor = null;
@@ -42,6 +43,7 @@ public class Bullet : MonoBehaviour
         string tag = collision.gameObject.tag;
         if (tag == "Drone" && !isDestroyed)
         {
+            SpawnCollisionParticles();
             isDestroyed = true;
             Drone drone = collision.gameObject.GetComponent<Drone>();
             drone.TakeDamage(damage);
@@ -54,9 +56,20 @@ public class Bullet : MonoBehaviour
             HiveCore hC = collision.gameObject.GetComponent<HiveCore>();
             if (hC.IsActive)
             {
+                SpawnCollisionParticles();
                 hC.TakeDamage(damage);
             }
             Destroy(gameObject);
+        }
+    }
+
+    void SpawnCollisionParticles()
+    {
+        // Spawn prefab of collision particles.
+        if (collisionParticlesPrefab != null)
+        {
+            GameObject p = Instantiate<GameObject>(collisionParticlesPrefab);
+            p.transform.position = transform.position;
         }
     }
 

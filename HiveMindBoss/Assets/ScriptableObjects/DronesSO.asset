@@ -17,13 +17,13 @@ MonoBehaviour:
   initialHealth: 100
   attackDamage: 20
   moveSpeed: 25
-  hurtTime: 0.5
+  hurtTime: 0.25
   shimmerTime: 1.5
   shimmerColor: {r: 0, g: 0, b: 0, a: 1}
   colorChangeTime: 0.5
   idleMaterial: {fileID: 2100000, guid: 4dc9afd63f6504a4298f39a981bc3f91, type: 2}
   attackMaterial: {fileID: 2100000, guid: 2db6582a965026b4bb71662a33a1e768, type: 2}
   deadMaterial: {fileID: 2100000, guid: cb0a77c7625c2914d970a1c9eba990ab, type: 2}
-  volume: 24.875622
-  radius: 1.8109027
-  scale: {x: 3.6218054, y: 3.6218054, z: 3.6218054}
+  volume: 555.55554
+  radius: 5.09972
+  scale: {x: 10.19944, y: 10.19944, z: 10.19944}

@@ -147,6 +147,7 @@ public class Hive : MonoBehaviour
             case eHiveStates.levelUp:
                 //float goalHealthRatio = (float)core.healthMax / (float)(hiveLevelMax - hiveLevel);
                 //float goalHealthRatio = (float)core.healthMax * (1f - 1f / ((float)hiveLevel / (float)hiveLevelMax));
+                //float goalHealthRatio = (float)core.healthMax - 
                 if (hiveStateTime >= levelUpStateTime)
                 //if (core.Health < core.healthMax)
                 {

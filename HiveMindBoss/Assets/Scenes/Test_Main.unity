@@ -1640,7 +1640,6 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
-  - component: {fileID: 963194231}
   - component: {fileID: 963194229}
   - component: {fileID: 963194230}
   m_Layer: 12
@@ -1747,7 +1746,7 @@ MonoBehaviour:
     m_Bits: 4096
   stopNaNPropagation: 1
   finalBlitToCameraTarget: 0
-  antialiasingMode: 0
+  antialiasingMode: 1
   temporalAntialiasing:
     jitterSpread: 0.75
     sharpness: 0.25
@@ -1789,20 +1788,6 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
---- !u!114 &963194231
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963194225}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f5af48a56df1664fb25d3b3610bb234, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skyboxes:
-  - {fileID: 2100000, guid: fe232082ab7ded94ea39b28f945d4b44, type: 2}
 --- !u!1 &1047948766
 GameObject:
   m_ObjectHideFlags: 0
@@ -3144,10 +3129,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9df5e52a55e90b419b50de4e0661ec0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 1000
+  health: 10000
   initialVolume: 5000
   scaleTime: 0.25
-  rectangularPrismScaleRatio: {x: 4, y: 9, z: 1}
+  rectangularPrismScaleRatio: {x: 4, y: 9, z: 2}
   cubeScaleRatio: {x: 1, y: 1, z: 1}
   colorChangeTime: 2
   activeMaterial: {fileID: 2100000, guid: 07e83d1bb18b47b47977778bc3ea708c, type: 2}
