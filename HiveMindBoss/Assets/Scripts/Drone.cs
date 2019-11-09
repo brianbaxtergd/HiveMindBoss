@@ -10,6 +10,7 @@ public class Drone : MonoBehaviour
     int health;
     bool isAlive = true;
     bool isAttacking = false;
+    bool isFollowingLeader = false;
     public bool recalledByHive = false;
     Vector3 targetPosition;
     Renderer rend;
@@ -31,7 +32,7 @@ public class Drone : MonoBehaviour
 
         if (isAlive)
         {
-            if (isAttacking && Vector3.Distance(transform.position, targetPosition) < 0.01f)
+            if (isAttacking && !isFollowingLeader && Vector3.Distance(transform.position, targetPosition) < 0.01f)
                 IsAttacking = false;
         }
         else
@@ -50,7 +51,7 @@ public class Drone : MonoBehaviour
     {
         if (isAlive)
         {
-            if (!isAttacking)
+            if (!isAttacking && !isFollowingLeader)
                 targetPosition = Hive.DronePositions[index];
         }
         else
@@ -154,6 +155,11 @@ public class Drone : MonoBehaviour
             if (!isAttacking)
                 StartCoroutine(ChangeMaterialColor(Hive.DronesSO.attackMaterial, Hive.DronesSO.idleMaterial));
         }
+    }
+    public bool IsFollowingLeader
+    {
+        get { return isFollowingLeader; }
+        set { isFollowingLeader = value; }
     }
     /*
     public Color DefaultColor

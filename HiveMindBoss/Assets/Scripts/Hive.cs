@@ -11,6 +11,7 @@ public class Hive : MonoBehaviour
         passive,
         idle,
         attackDronesOneByOne,
+        attackDroneGroup,
         attackLaser,
         levelUp,
         dead,
@@ -24,6 +25,7 @@ public class Hive : MonoBehaviour
 
     [Header("Inscribed - Drones")]
     public DronesScriptableObject dronesSO;
+    public GameObject droneGroupLeaderPrefab;
     //[Range(10, 250)] public int droneCount;
     [Range(5, 25)] public float droneDistance; // From center of Hive.
 
@@ -61,6 +63,8 @@ public class Hive : MonoBehaviour
     AudioSource spawnDronesAudio;
     AudioSource levelUpAudio;
     AudioSource deathAudio;
+
+    DroneGroupLeader droneGroupLeader = null;
 
     private void Awake()
     {
@@ -129,13 +133,19 @@ public class Hive : MonoBehaviour
                 RotateDronePositions(hiveRotation * Time.fixedDeltaTime);
                 if (hiveStateTime >= idleStateTime)
                 {
-                    eHiveStates[] potentialAttackStates = { eHiveStates.attackDronesOneByOne, eHiveStates.attackLaser };
+                    eHiveStates[] potentialAttackStates = { eHiveStates.attackDronesOneByOne, eHiveStates.attackDroneGroup, eHiveStates.attackLaser };
                     eHiveStates randomAttackState = potentialAttackStates[Random.Range(0, potentialAttackStates.Length)];
                     SetState(randomAttackState);
                 }
                 break;
             case eHiveStates.attackDronesOneByOne:
                 RotateDronePositions(hiveRotation * Time.fixedDeltaTime);
+                break;
+            case eHiveStates.attackDroneGroup:
+                if (!droneGroupLeader.IsAttacking)
+                {
+                    SetState(eHiveStates.idle);
+                }
                 break;
             case eHiveStates.attackLaser:
                 if (!laser.IsFiring)
@@ -194,6 +204,9 @@ public class Hive : MonoBehaviour
                 int randDroneCount = Random.Range(stateAttackDronesOneByOne_droneCountMin[hiveLevel], stateAttackDronesOneByOne_droneCountMax[hiveLevel] + 1);
                 attackCoroutine = StartCoroutine(DroneAttack(randDroneCount));
                 hiveRotationTarget = hiveRotationAttacking;
+                break;
+            case eHiveStates.attackDroneGroup:
+                DroneAttackGroup(5);
                 break;
             case eHiveStates.attackLaser:
                 KillDrones();
@@ -377,6 +390,23 @@ public class Hive : MonoBehaviour
         //core.IsActive = true;
         // Update core volume.
         core.Volume -= dronesSO.volume * DroneCount;
+    }
+
+    void DroneAttackGroup(int _droneCount)
+    {
+        DroneGroupLeader leader = Instantiate<GameObject>(droneGroupLeaderPrefab).GetComponent<DroneGroupLeader>();
+        leader.transform.position = core.transform.position;
+        leader.TargetPosition = player.transform.position;
+        leader.transform.LookAt(leader.TargetPosition);
+        droneGroupLeader = leader;
+        Drone d;
+        for (int i = 0; i < _droneCount; i++)
+        {
+            d = GetDroneNearestToPlayer();
+            d.IsAttacking = true;
+            d.IsFollowingLeader = true;
+            leader.AddDrone(d);
+        }
     }
 
     IEnumerator DroneAttack(int _droneCount)

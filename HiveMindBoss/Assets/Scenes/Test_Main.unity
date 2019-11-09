@@ -2437,6 +2437,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dronesSO: {fileID: 11400000, guid: f5be0b7e84f0b414997b432d46a11d36, type: 2}
+  droneGroupLeaderPrefab: {fileID: 8166269620558792023, guid: 3c622e4034ac396438f0080b0201bb55,
+    type: 3}
   droneDistance: 20
   hiveRotationSpeed: 3.141595
   hiveRotationIdle: {x: 0, y: -12, z: 0}
